@@ -56,33 +56,45 @@ const fetchRequests = async () => {
           <ul className="list-group">
             {requests.map((r) => (
 <li key={r._id} className="list-group-item d-flex justify-content-between align-items-center">
-  {currentUser && (
-    <p className="mb-1">
-      From: <strong>
-        {r.investorId?._id === currentUser.id
-          ? r.entrepreneurId?.name
-          : r.investorId?.name}
-      </strong>
-      <button
-        className="btn btn-sm btn-outline-primary ms-3"
-        onClick={() => {
-          const senderId =
-            r.investorId?._id === currentUser.id
-              ? r.entrepreneurId?._id
-              : r.investorId?._id;
-          const role =
-            r.investorId?._id === currentUser.id ? 'entrepreneur' : 'investor';
+  {currentUser && (() => {
+    const isSender = r.investorId?._id === currentUser.id || r.entrepreneurId?._id === currentUser.id;
+    const sender =
+      r.investorId?._id === currentUser.id ? r.investorId : r.entrepreneurId;
+    const receiver =
+      r.investorId?._id === currentUser.id ? r.entrepreneurId : r.investorId;
 
-          window.location.href = `/profile/${role}/${senderId}`;
-        }}
-      >
-        🔍 View Profile
-      </button>
-    </p>
-  )}
+    return (
+      <div className="flex-grow-1">
+        <p className="mb-1">
+          {r.investorId?._id === currentUser.id || r.entrepreneurId?._id === currentUser.id
+            ? (
+              <>
+                <strong>
+                  {sender._id === currentUser.id ? `To: ${receiver.name}` : `From: ${sender.name}`}
+                </strong>
+                <button
+                  className="btn btn-sm btn-outline-primary ms-3"
+                  onClick={() => {
+                    const role = receiver.role?.toLowerCase(); // Ensure lowercase for URL
+                    window.location.href = `/profile/${role}/${receiver._id}`;
+                  }}
+                >
+                  🔍 View Profile
+                </button>
+              </>
+            )
+            : null}
+        </p>
+      </div>
+    );
+  })()}
 
   <div>
-    {r.status === 'pending' ? (
+    {/* Show buttons only if current user is the RECEIVER */}
+    {(
+      (r.investorId?._id !== currentUser.id && currentUser.role === 'Investor') ||
+      (r.entrepreneurId?._id !== currentUser.id && currentUser.role === 'Entrepreneur')
+    ) && r.status === 'pending' ? (
       <>
         <button
           className="btn btn-success btn-sm me-2"
@@ -98,16 +110,13 @@ const fetchRequests = async () => {
         </button>
       </>
     ) : (
-      <span
-        className={`badge ${
-          r.status === 'accepted' ? 'bg-success' : 'bg-danger'
-        }`}
-      >
+      <span className={`badge ${r.status === 'accepted' ? 'bg-success' : 'bg-danger'}`}>
         {r.status}
       </span>
     )}
   </div>
 </li>
+
 
             ))}
           </ul>
