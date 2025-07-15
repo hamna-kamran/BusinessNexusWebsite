@@ -1,5 +1,6 @@
 import DashboardLayout from '../layouts/DashboardLayout';
 import { useNavigate } from 'react-router-dom';
+import TipsSection from '../components/TipSection';
 
 export default function InvestorDashboard() {
       const user = JSON.parse(localStorage.getItem('user'));
@@ -49,7 +50,8 @@ export default function InvestorDashboard() {
           transform: scale(1.05);
         }
       `}</style>
-      
+       {/* Tips Section */}
+      <TipsSection />
     </DashboardLayout>
   );
 }

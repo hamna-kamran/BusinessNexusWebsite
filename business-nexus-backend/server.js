@@ -5,6 +5,7 @@ const cors = require('cors');
 const authRoutes = require('./routes/auth');
 const entrepreneurRoutes = require('./routes/EntrepreneurProfile');
 const investorRoutes = require('./routes/InvestorProfile');
+const requestRoutes = require('./routes/collaborationRequest');
 
 
 
@@ -18,6 +19,7 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
 app.use('/api/auth', authRoutes);
 app.use('/api/entrepreneur', entrepreneurRoutes);
 app.use('/api/investor', investorRoutes);
+app.use('/api', requestRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

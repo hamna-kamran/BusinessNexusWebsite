@@ -7,6 +7,10 @@ import EntrepreneurProfileForm from './pages/CreateEntrepreneurProfile';
 import InvestorProfileForm from './pages/CreateInvestorProfile';
 import InvestorProfileView from './pages/InvestorProfile';
 import EntrepreneurProfileView from './pages/EntrepreneurProfile';
+import AllEntrepreneurs from './pages/ViewAllEntrepreneurs';
+import AllInvestors from './pages/ViewAllInvestors'; 
+import CollaborationRequests from './pages/CollaborationRequests';
+import Logout from './pages/Logout'; 
 
 
 function App() {
@@ -23,6 +27,11 @@ function App() {
         <Route path="/profile/investor/:id" element={<InvestorProfileView />} />
         <Route path="/investor/profile/edit" element={<InvestorProfileForm />} />
         <Route path="/profile/entrepreneur/:id" element={<EntrepreneurProfileView />} />
+        <Route path="/entrepreneurs" element={<AllEntrepreneurs />} />
+        <Route path="/profile/entrepreneur/:id" element={<EntrepreneurProfileView />} />
+        <Route path="/investors" element={<AllInvestors />} />
+        <Route path="/requests" element={<CollaborationRequests />} />
+        <Route path="/logout" element={<Logout />} />
 
 
       </Routes>

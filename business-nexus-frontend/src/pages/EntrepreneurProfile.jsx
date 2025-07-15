@@ -38,7 +38,7 @@ export default function EntrepreneurProfileView() {
         });
       } catch (err) {
         console.error(err);
-        setError('Failed to load profile');
+        setError('Failed to load profile.');
       }
     };
 
@@ -86,8 +86,8 @@ export default function EntrepreneurProfileView() {
 
   return (
     <DashboardLayout>
-      <div className="container py-5" style={{ backgroundColor: '#f9f9f9' }}>
-        <div className="card shadow border-0 mx-auto" style={{ maxWidth: '900px' }}>
+      <div className="container py-5" style={{ backgroundColor: '#f9f9f9', minHeight: '100vh' }}>
+        <div className="card shadow-lg border-0 mx-auto" style={{ maxWidth: '900px' }}>
           <div className="card-body d-flex flex-column flex-md-row align-items-start">
             {/* Profile Picture */}
             <div className="me-md-4 mb-3 mb-md-0">
@@ -110,55 +110,100 @@ export default function EntrepreneurProfileView() {
                 <form onSubmit={handleSubmit}>
                   <div className="mb-3">
                     <label className="form-label">Bio</label>
-                    <textarea className="form-control" name="bio" rows="3" value={form.bio} onChange={handleChange} />
+                    <textarea
+                      className="form-control"
+                      name="bio"
+                      rows="3"
+                      value={form.bio}
+                      onChange={handleChange}
+                      required
+                    />
                   </div>
+
                   <div className="mb-3">
                     <label className="form-label">Startup Description</label>
-                    <textarea className="form-control" name="startupDescription" rows="3" value={form.startupDescription} onChange={handleChange} />
+                    <textarea
+                      className="form-control"
+                      name="startupDescription"
+                      rows="3"
+                      value={form.startupDescription}
+                      onChange={handleChange}
+                      required
+                    />
                   </div>
+
                   <div className="mb-3">
                     <label className="form-label">Funding Need</label>
-                    <input className="form-control" name="fundingNeed" value={form.fundingNeed} onChange={handleChange} />
+                    <input
+                      className="form-control"
+                      name="fundingNeed"
+                      value={form.fundingNeed}
+                      onChange={handleChange}
+                      required
+                    />
                   </div>
+
                   <div className="mb-4">
                     <label className="form-label">Pitch Deck (link or text)</label>
-                    <input className="form-control" name="pitchDeck" value={form.pitchDeck} onChange={handleChange} />
+                    <input
+                      className="form-control"
+                      name="pitchDeck"
+                      value={form.pitchDeck}
+                      onChange={handleChange}
+                      required
+                    />
                   </div>
+
                   <button className="btn btn-primary me-2" type="submit">Update</button>
                   <button className="btn btn-secondary" type="button" onClick={() => setIsEditing(false)}>Cancel</button>
                 </form>
               ) : profile ? (
                 <>
-                  <div className="mb-3">
+                  <div className="mb-4 border-start ps-3 border-4 border-primary bg-light rounded py-2">
                     <h6 className="text-muted">Bio</h6>
-                    <p>{profile.bio}</p>
+                    <p className="fs-6">{profile.bio}</p>
                   </div>
-                  <div className="mb-3">
+
+                  <div className="mb-4 border-start ps-3 border-4 border-success bg-light rounded py-2">
                     <h6 className="text-muted">Startup Description</h6>
-                    <p>{profile.startupDescription}</p>
+                    <p className="fs-6">{profile.startupDescription}</p>
                   </div>
-                  <div className="mb-3">
+
+                  <div className="mb-4 border-start ps-3 border-4 border-warning bg-light rounded py-2">
                     <h6 className="text-muted">Funding Need</h6>
-                    <p>{profile.fundingNeed}</p>
+                    <p className="fs-6">{profile.fundingNeed}</p>
                   </div>
-                  <div className="mb-3">
+
+                  <div className="border-start ps-3 border-4 border-info bg-light rounded py-2">
                     <h6 className="text-muted">Pitch Deck</h6>
-                    <p>{profile.pitchDeck}</p>
+                    <p className="fs-6">{profile.pitchDeck}</p>
                   </div>
+
                   {isOwner && (
-                    <div className="mt-3 d-flex flex-column gap-2 align-items-start">
-                      <button className="btn btn-outline-primary" onClick={() => setIsEditing(true)}>Edit Profile</button>
-                      <button className="btn btn-outline-danger" onClick={handleDelete}>Delete Profile</button>
+                    <div className="mt-4 d-flex flex-column align-items-start gap-2">
+                      <button
+                        className="btn btn-outline-primary"
+                        onClick={() => setIsEditing(true)}
+                      >
+                        Edit Profile
+                      </button>
+                      <button
+                        className="btn btn-outline-danger"
+                        onClick={handleDelete}
+                      >
+                        Delete Profile
+                      </button>
                     </div>
                   )}
                 </>
               ) : (
-                <p>Loading profile...</p>
+                !error && <p className="text-muted">Loading profile...</p>
               )}
             </div>
           </div>
         </div>
       </div>
+      
     </DashboardLayout>
   );
 }
