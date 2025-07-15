@@ -74,6 +74,31 @@ router.delete('/profile/:id', auth, async (req, res) => {
   }
 });
 
+// GET /api/investor/all
+router.get('/all', auth, async (req, res) => {
+  try {
+    const profiles = await InvestorProfile.find().populate('user', 'name email');
+
+    const formatted = profiles
+      .filter(p => p.user) // ✅ Ensure user is not null
+      .map(p => ({
+        _id: p._id,
+        user: p.user._id,
+        name: p.user.name,
+        email: p.user.email,
+        investmentInterests: p.investmentInterests,
+        portfolioCompanies: p.portfolioCompanies || [],
+      }));
+
+    res.json(formatted);
+  } catch (err) {
+    console.error('Error fetching investors:', err);
+    res.status(500).json({ msg: 'Server error' });
+  }
+});
+
+
+
 
 
 

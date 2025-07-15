@@ -78,6 +78,31 @@ router.get('/profile/:id', auth, async (req, res) => {
   }
 });
 
+// Get all entrepreneur profiles
+router.get('/all', auth, async (req, res) => {
+  try {
+    const profiles = await EntrepreneurProfile.find().populate('user', 'name email');
+
+    // Filter out profiles with missing user
+    const validProfiles = profiles.filter(p => p.user !== null);
+
+    const formattedProfiles = validProfiles.map(p => ({
+      _id: p._id,
+      user: p.user._id,
+      name: p.user.name,
+      email: p.user.email,
+      bio: p.bio,
+      startupDescription: p.startupDescription,
+    }));
+
+    res.json(formattedProfiles);
+  } catch (err) {
+    console.error('Error fetching entrepreneurs:', err);
+    res.status(500).json({ msg: 'Server error' });
+  }
+});
+
+
 
 
 module.exports = router;
