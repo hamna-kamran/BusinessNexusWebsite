@@ -34,7 +34,7 @@ router.post('/', auth, async (req, res) => {
     res.status(201).json(newMessage);
   } catch (err) {
     console.error('Send Message Error:', err);
-    res.status(500).json({ msg: 'Server error' });
+    res.status(500).json({ msg: 'Server error coming' });
   }
 });
 
