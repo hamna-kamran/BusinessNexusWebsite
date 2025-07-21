@@ -9,117 +9,141 @@ export default function CollaborationRequests() {
   const token = localStorage.getItem('token');
 
   useEffect(() => {
-const fetchRequests = async () => {
-  try {
-    const res = await axios.get('http://localhost:5000/api/requests', {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const fetchRequests = async () => {
+      try {
+        const res = await axios.get('http://localhost:5000/api/requests', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-    // Decode user from token
-    const decoded = JSON.parse(atob(token.split('.')[1])); // extract user info from JWT
-    setCurrentUser(decoded); // decoded will have id and role
+        const decoded = JSON.parse(atob(token.split('.')[1]));
+        setCurrentUser(decoded);
 
-    setRequests(res.data || []);
-  } catch (err) {
-    console.error("Error fetching requests", err);
-  } finally {
-    setLoading(false);
-  }
-};
+        const data = res.data;
+        const formatted = Array.isArray(data) ? data : data.requests || [];
+        setRequests(formatted);
+      } catch (err) {
+        console.error('Error fetching requests', err);
+        setRequests([]);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    fetchRequests();
-  }, []);
+    if (token) fetchRequests();
+  }, [token]);
 
-  const updateStatus = async (id, status) => {
+  const handleAction = async (id, action) => {
     try {
-      await axios.patch(`http://localhost:5000/api/request/${id}`, { status }, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setRequests(prev =>
-        prev.map(r => r._id === id ? { ...r, status } : r)
+      await axios.patch(
+        `http://localhost:5000/api/requests/${id}/status`,
+        { action },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      setRequests((prev) =>
+        prev.map((r) =>
+          r._id === id
+            ? { ...r, status: action === 'accept' ? 'accepted' : 'rejected' }
+            : r
+        )
       );
     } catch (err) {
-      console.error("Error updating request", err);
+      console.error(`${action} error`, err.response?.data || err.message);
     }
   };
 
   return (
     <DashboardLayout>
       <div className="container py-5">
-        <h3 className="text-center mb-4">📨 Collaboration Requests</h3>
+        <h3 className="text-center mb-4">
+          📨 <span className="fw-bold">Collaboration Requests</span>
+        </h3>
 
         {loading ? (
-          <p>Loading...</p>
+          <div className="text-center text-muted">
+            <div className="spinner-border text-primary" role="status" />
+            <p className="mt-2">Loading...</p>
+          </div>
         ) : requests.length === 0 ? (
-          <p className="text-muted text-center">No requests found.</p>
+          <p className="text-muted text-center">No collaboration requests found.</p>
         ) : (
-          <ul className="list-group">
-            {requests.map((r) => (
-<li key={r._id} className="list-group-item d-flex justify-content-between align-items-center">
-  {currentUser && (() => {
-    const isSender = r.investorId?._id === currentUser.id || r.entrepreneurId?._id === currentUser.id;
-    const sender =
-      r.investorId?._id === currentUser.id ? r.investorId : r.entrepreneurId;
-    const receiver =
-      r.investorId?._id === currentUser.id ? r.entrepreneurId : r.investorId;
+          <div className="row row-cols-1 row-cols-md-2 g-4">
+            {requests.map((r) => {
+              const isSender = r.senderId?._id === currentUser?.id;
+              const isReceiver = !isSender;
+              const otherParty = isSender
+                ? r.investorId._id === currentUser.id
+                  ? r.entrepreneurId
+                  : r.investorId
+                : r.senderId;
 
-    return (
-      <div className="flex-grow-1">
-        <p className="mb-1">
-          {r.investorId?._id === currentUser.id || r.entrepreneurId?._id === currentUser.id
-            ? (
-              <>
-                <strong>
-                  {sender._id === currentUser.id ? `To: ${receiver.name}` : `From: ${sender.name}`}
-                </strong>
-                <button
-                  className="btn btn-sm btn-outline-primary ms-3"
-                  onClick={() => {
-                    const role = receiver.role?.toLowerCase(); // Ensure lowercase for URL
-                    window.location.href = `/profile/${role}/${receiver._id}`;
-                  }}
-                >
-                  🔍 View Profile
-                </button>
-              </>
-            )
-            : null}
-        </p>
-      </div>
-    );
-  })()}
+              return (
+                <div key={r._id} className="col">
+                  <div className="card shadow-sm border-0 h-100">
+                    <div className="card-body">
+                      <h5 className="card-title mb-3">
+                        {isSender ? `To: ${otherParty.name}` : `From: ${otherParty.name}`}
+                      </h5>
 
-  <div>
-    {/* Show buttons only if current user is the RECEIVER */}
-    {(
-      (r.investorId?._id !== currentUser.id && currentUser.role === 'Investor') ||
-      (r.entrepreneurId?._id !== currentUser.id && currentUser.role === 'Entrepreneur')
-    ) && r.status === 'pending' ? (
-      <>
-        <button
-          className="btn btn-success btn-sm me-2"
-          onClick={() => updateStatus(r._id, 'accepted')}
-        >
-          Accept
-        </button>
-        <button
-          className="btn btn-danger btn-sm"
-          onClick={() => updateStatus(r._id, 'rejected')}
-        >
-          Reject
-        </button>
-      </>
-    ) : (
-      <span className={`badge ${r.status === 'accepted' ? 'bg-success' : 'bg-danger'}`}>
-        {r.status}
-      </span>
-    )}
-  </div>
-</li>
+                      <div className="d-flex flex-wrap gap-2 mb-3">
+                        <button
+                          className="btn btn-sm btn-outline-primary"
+                          onClick={() =>
+                            window.location.href = `/profile/${otherParty.role?.toLowerCase()}/${otherParty._id}`
+                          }
+                        >
+                          🔍 View Profile
+                        </button>
 
+                        {r.status === 'accepted' && (
+                          <button
+                            className="btn btn-sm btn-success"
+                            onClick={() =>
+                              (window.location.href = `/chat/${otherParty._id}`)
+                            }
+                          >
+                            💬 Chat
+                          </button>
+                        )}
 
-            ))}
-          </ul>
+                        {r.status === 'pending' && isReceiver && (
+                          <>
+                            <button
+                              className="btn btn-sm btn-success"
+                              onClick={() => handleAction(r._id, 'accept')}
+                            >
+                              ✅ Accept
+                            </button>
+                            <button
+                              className="btn btn-sm btn-danger"
+                              onClick={() => handleAction(r._id, 'reject')}
+                            >
+                              ❌ Reject
+                            </button>
+                          </>
+                        )}
+                      </div>
+
+                      {r.status !== 'pending' && (
+                        <span
+                          className={`badge ${
+                            r.status === 'accepted' ? 'bg-success' : 'bg-secondary'
+                          }`}
+                        >
+                          {r.status.charAt(0).toUpperCase() + r.status.slice(1)}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         )}
       </div>
     </DashboardLayout>

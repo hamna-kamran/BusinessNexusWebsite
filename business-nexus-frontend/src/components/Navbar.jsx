@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaBell, FaCommentDots, FaUserCircle } from 'react-icons/fa';
+import {FaUserCircle } from 'react-icons/fa';
 import logo from '../assets/logo.png';
 
 export default function Navbar({ setShowSidebar }) {
@@ -23,9 +23,6 @@ export default function Navbar({ setShowSidebar }) {
           <img src={logo} alt="Business Nexus Logo" style={{ height: '50px', marginRight: '10px', width: '230px' }} />
         </Link>
 
-        <div className="d-flex align-items-center gap-3">
-          <FaBell size={20} />
-          <FaCommentDots size={20} />
 
           <div className="dropdown">
             <button className="btn dropdown-toggle d-flex align-items-center text-white" type="button" data-bs-toggle="dropdown">
@@ -36,14 +33,12 @@ export default function Navbar({ setShowSidebar }) {
               <li>
                 <Link className="dropdown-item" to={`/profile/${user?.role}/${user?._id}`}>View Profile</Link>
               </li>
-              <li><Link className="dropdown-item" to="/settings">Settings</Link></li>
-              <li><Link className="dropdown-item" to="/messages">Messages</Link></li>
               <li><hr className="dropdown-divider" /></li>
               <li><button className="dropdown-item text-danger" onClick={handleLogout}>Logout</button></li>
             </ul>
           </div>
         </div>
-      </div>
+     
     </nav>
   );
 }
