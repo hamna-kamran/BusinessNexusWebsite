@@ -11,6 +11,11 @@ const CollaborationRequestSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
+  senderId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
   status: {
     type: String,
     enum: ['pending', 'accepted', 'rejected'],
