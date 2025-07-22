@@ -65,4 +65,62 @@ router.get('/current', authMiddleware, async (req, res) => {
   }
 });
 
+// Get Current User
+router.get('/current', authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select('-password');
+    if (!user) return res.status(404).json({ msg: 'User not found' });
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ msg: 'Server error' });
+  }
+});
+
+// ✅ Update Name or Email
+router.patch('/update-profile', authMiddleware, async (req, res) => {
+  const { name, email } = req.body;
+
+  try {
+    const updates = {};
+    if (name) updates.name = name;
+    if (email) updates.email = email;
+
+    const updatedUser = await User.findByIdAndUpdate(req.user._id, updates, { new: true }).select('-password');
+    res.json({ msg: 'Profile updated', user: updatedUser });
+  } catch (err) {
+    res.status(500).json({ msg: 'Error updating profile' });
+  }
+});
+
+// ✅ Change Password
+router.patch('/change-password', authMiddleware, async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+
+  try {
+    const user = await User.findById(req.user._id);
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+
+    if (!isMatch) {
+      return res.status(400).json({ msg: 'Current password is incorrect' });
+    }
+
+    const hashed = await bcrypt.hash(newPassword, 10);
+    user.password = hashed;
+    await user.save();
+
+    res.json({ msg: 'Password updated' });
+  } catch (err) {
+    res.status(500).json({ msg: 'Error changing password' });
+  }
+});
+
+// ❌ Delete Account
+router.delete('/delete-account', authMiddleware, async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.user._id);
+    res.json({ msg: 'Account deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ msg: 'Error deleting account' });
+  }
+});
 module.exports = router;

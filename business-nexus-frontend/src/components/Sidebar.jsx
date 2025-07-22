@@ -25,7 +25,6 @@ export default function Sidebar() {
       { label: 'Dashboard', path: `/dashboard/investor` },
       { label: 'Entrepreneurs', path: '/entrepreneurs' },
       { label: 'Collaboration Requests', path: '/requests' },
-      { label: 'Chat', path: '/chat' },
       { label: 'My Profile', path: `/profile/investor/${userId}` }, // goes to view page
       { label: 'Settings', path: '/settings' },
       { label: 'Logout', path: '/logout' },
@@ -34,7 +33,6 @@ export default function Sidebar() {
       { label: 'Dashboard', path: `/dashboard/entrepreneur` },
       { label: 'Investors', path: '/investors' },
       { label: 'Collaboration Requests', path: '/requests' },
-      { label: 'Chat', path: '/chat' },
       { label: 'My Profile', path: `/profile/entrepreneur/${userId}` },
       { label: 'Settings', path: '/settings' },
       { label: 'Logout', path: '/logout' },

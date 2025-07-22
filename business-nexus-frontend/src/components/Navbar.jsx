@@ -30,9 +30,6 @@ export default function Navbar({ setShowSidebar }) {
               {user?.name?.split(' ')[0] || 'User'}
             </button>
             <ul className="dropdown-menu dropdown-menu-end shadow-sm">
-              <li>
-                <Link className="dropdown-item" to={`/profile/${user?.role}/${user?._id}`}>View Profile</Link>
-              </li>
               <li><hr className="dropdown-divider" /></li>
               <li><button className="dropdown-item text-danger" onClick={handleLogout}>Logout</button></li>
             </ul>
