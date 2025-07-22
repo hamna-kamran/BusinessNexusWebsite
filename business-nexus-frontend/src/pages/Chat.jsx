@@ -24,7 +24,7 @@ export default function ChatPage() {
 
   const fetchCurrentUser = useCallback(async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/auth/current', {
+      const res = await axios.get('https://businessnexuswebsite.onrender.com/api/auth/current', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCurrentUserId(res.data._id);
@@ -38,7 +38,7 @@ export default function ChatPage() {
   const fetchMessages = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`http://localhost:5000/api/chat/${userId}`, {
+      const res = await axios.get(`https://businessnexuswebsite.onrender.com/api/chat/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMessages(res.data);
@@ -55,7 +55,7 @@ export default function ChatPage() {
     if (!input.trim()) return;
     try {
       const res = await axios.post(
-        'http://localhost:5000/api/chat',
+        'https://businessnexuswebsite.onrender.com/api/chat',
         { receiver: userId, message: input },
         { headers: { Authorization: `Bearer ${token}` } }
       );

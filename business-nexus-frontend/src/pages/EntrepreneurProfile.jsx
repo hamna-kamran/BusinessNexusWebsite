@@ -26,7 +26,7 @@ export default function EntrepreneurProfileView() {
       if (!id) return setError('Invalid profile ID.');
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get(`http://localhost:5000/api/entrepreneur/profile/${id}`, {
+        const res = await axios.get(`https://businessnexuswebsite.onrender.com/api/entrepreneur/profile/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setProfile(res.data);
@@ -54,7 +54,7 @@ export default function EntrepreneurProfileView() {
     try {
       const token = localStorage.getItem('token');
       await axios.put(
-        `http://localhost:5000/api/entrepreneur/profile/${id}`,
+        `https://businessnexuswebsite.onrender.com/api/entrepreneur/profile/${id}`,
         form,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -73,7 +73,7 @@ export default function EntrepreneurProfileView() {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/entrepreneur/profile/${id}`, {
+      await axios.delete(`https://businessnexuswebsite.onrender.com/api/entrepreneur/profile/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert('Profile deleted');
