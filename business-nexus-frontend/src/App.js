@@ -12,6 +12,7 @@ import AllInvestors from './pages/ViewAllInvestors';
 import CollaborationRequests from './pages/CollaborationRequests';
 import Logout from './pages/Logout'; 
 import ChatPage from './pages/Chat';
+import AccountSettings from './pages/AccountSetting';
 
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
         <Route path="/requests" element={<CollaborationRequests />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/chat/:userId" element={<ChatPage />} />
+        <Route path="/settings" element={<AccountSettings />} />
 
 
       </Routes>

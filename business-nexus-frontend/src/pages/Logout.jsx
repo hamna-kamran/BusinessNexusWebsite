@@ -1,18 +1,22 @@
 // src/pages/Logout.jsx
-
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function Logout() {
   const navigate = useNavigate();
+  const hasPromptedRef = useRef(false);  // ✅ Track if prompt already shown
 
   useEffect(() => {
-    const confirmLogout = window.confirm("Are you sure you want to log out?");
-    if (confirmLogout) {
-      localStorage.removeItem('token');  // ✅ Clear the token
-      navigate('/login');                // ✅ Redirect to login
-    } else {
-      navigate(-1); // Go back if user cancels
+    if (!hasPromptedRef.current) {
+      hasPromptedRef.current = true;
+
+      const confirmLogout = window.confirm("Are you sure you want to log out?");
+      if (confirmLogout) {
+        localStorage.removeItem('token');
+        navigate('/login');
+      } else {
+        navigate(-1); // Go back
+      }
     }
   }, [navigate]);
 
