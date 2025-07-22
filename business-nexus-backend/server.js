@@ -14,8 +14,23 @@ const chatRoutes = require('./routes/Chat');
 
 const app = express();
 
-// Middleware
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+// ✅ CORS Setup: Allow both localhost (for testing) and Vercel
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://business-nexus-website-frontend.vercel.app'
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
+
 app.use(express.json());
 
 // MongoDB Connection
@@ -23,8 +38,8 @@ mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
-  .then(() => console.log(' MongoDB connected'))
-  .catch(err => console.error(' MongoDB connection error:', err));
+  .then(() => console.log('✅ MongoDB connected'))
+  .catch(err => console.error('❌ MongoDB connection error:', err));
 
 // API Routes
 app.use('/api/auth', authRoutes);
@@ -37,7 +52,7 @@ app.use('/api/chat', chatRoutes);
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:3000',
+    origin: allowedOrigins,
     credentials: true
   }
 });
@@ -47,14 +62,10 @@ const users = new Map();
 
 // Socket.IO Events
 io.on('connection', (socket) => {
-  // console.log(' New client connected:', socket.id);
-
   socket.on('join', ({ userId }) => {
     users.set(userId, socket.id);
-    // console.log(`User joined: ${userId}`);
   });
 
-  // Chat message
   socket.on('send_message', ({ senderId, receiverId, message }) => {
     const receiverSocketId = users.get(receiverId);
     const msgData = {
@@ -68,9 +79,8 @@ io.on('connection', (socket) => {
       io.to(receiverSocketId).emit('receive_message', msgData);
     }
 
-    io.emit('messageReceived', msgData); // Optional broadcast
+    io.emit('messageReceived', msgData);
   });
-
 
   socket.on('disconnect', () => {
     for (const [userId, id] of users.entries()) {
@@ -86,5 +96,5 @@ io.on('connection', (socket) => {
 // Start Server
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
