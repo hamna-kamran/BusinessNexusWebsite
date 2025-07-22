@@ -10,7 +10,7 @@ export default function AccountSettings() {
   const token = localStorage.getItem('token');
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/auth/current', {
+    axios.get('https://businessnexuswebsite.onrender.com/api/auth/current', {
       headers: { Authorization: `Bearer ${token}` }
     })
     .then(res => setUser({ name: res.data.name, email: res.data.email }))
@@ -20,7 +20,7 @@ export default function AccountSettings() {
   const handleUserUpdate = async () => {
     setLoading(true);
     try {
-     await axios.patch('http://localhost:5000/api/auth/update-profile', user, {
+     await axios.patch('https://businessnexuswebsite.onrender.com/api/auth/update-profile', user, {
         headers: { Authorization: `Bearer ${token}` }
       });
       alert('User info updated successfully');
@@ -38,7 +38,7 @@ export default function AccountSettings() {
 
     setLoading(true);
     try {
-     await axios.patch('http://localhost:5000/api/auth/change-password', {
+     await axios.patch('https://businessnexuswebsite.onrender.com/api/auth/change-password', {
   currentPassword: passwords.currentPassword,
   newPassword: passwords.newPassword
 }, {
@@ -57,7 +57,7 @@ export default function AccountSettings() {
   const handleDeleteAccount = async () => {
     setLoading(true);
     try {
-    await axios.delete('http://localhost:5000/api/auth/delete-account', {
+    await axios.delete('https://businessnexuswebsite.onrender.com/api/auth/delete-account', {
         headers: { Authorization: `Bearer ${token}` }
       });
       alert('Account deleted successfully');

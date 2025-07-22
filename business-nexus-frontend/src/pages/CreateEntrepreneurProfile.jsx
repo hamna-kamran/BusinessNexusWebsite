@@ -21,7 +21,7 @@ export default function EntrepreneurProfileForm() {
     try {
   const token = localStorage.getItem('token');
   await axios.post(
-  'http://localhost:5000/api/entrepreneur/profile',
+  'https://businessnexuswebsite.onrender.com/api/entrepreneur/profile',
   { ...form, userId: user._id },
   {
     headers: { Authorization: `Bearer ${token}` },

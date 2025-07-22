@@ -37,7 +37,7 @@ export default function Register() {
     }
 
     try {
-      const { data } = await api.post('/auth/register', form);
+      const { data } = await api.post('https://businessnexuswebsite.onrender.com/auth/register', form);
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
       navigate(`/dashboard/${form.role}`);

@@ -17,7 +17,7 @@ export default function CollaborationRequests() {
         const decoded = JSON.parse(atob(token.split('.')[1]));
         setCurrentUser(decoded);
 
-        const res = await axios.get('http://localhost:5000/api/requests', {
+        const res = await axios.get('https://businessnexuswebsite.onrender.com/api/requests', {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -46,7 +46,7 @@ export default function CollaborationRequests() {
   const handleAction = async (id, action) => {
     try {
       const res = await axios.patch(
-        `http://localhost:5000/api/requests/${id}/status`,
+        `https://businessnexuswebsite.onrender.com/api/requests/${id}/status`,
         { action },
         { headers: { Authorization: `Bearer ${token}` } }
       );

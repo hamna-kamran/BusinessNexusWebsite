@@ -18,7 +18,7 @@ export default function AllInvestors() {
       }
 
       try {
-        const res = await axios.get('http://localhost:5000/api/investor/all', {
+        const res = await axios.get('https://businessnexuswebsite.onrender.com/api/investor/all', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -37,7 +37,7 @@ export default function AllInvestors() {
     const token = localStorage.getItem('token');
 
     await axios.post(
-      'http://localhost:5000/api/request',
+      'https://businessnexuswebsite.onrender.com/api/request',
       { toUserId: id },
       {
         headers: { Authorization: `Bearer ${token}` },

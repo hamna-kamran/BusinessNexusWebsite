@@ -25,7 +25,7 @@ export default function InvestorProfileView() {
 
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get(`http://localhost:5000/api/investor/profile/${id}`, {
+        const res = await axios.get(`https://businessnexuswebsite.onrender.com/api/investor/profile/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setProfile(res.data);
@@ -57,7 +57,7 @@ export default function InvestorProfileView() {
       };
 
       await axios.put(
-        `http://localhost:5000/api/investor/profile/${id}`,
+        `https://businessnexuswebsite.onrender.com/api/investor/profile/${id}`,
         payload,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -77,7 +77,7 @@ export default function InvestorProfileView() {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/investor/profile/${id}`, {
+      await axios.delete(`https://businessnexuswebsite.onrender.com/api/investor/profile/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
